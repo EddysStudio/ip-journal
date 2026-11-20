@@ -1,7 +1,8 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace EddysStudio\IpJournal;
 
+use Illuminate\Routing\Router;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -13,14 +14,15 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
-use VendorName\Skeleton\Testing\TestsSkeleton;
+use EddysStudio\IpJournal\Commands\IpJournalCommand;
+use EddysStudio\IpJournal\Testing\TestsIpJournal;
+use EddysStudio\IpJournal\Http\Middleware\VisitsLog;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class IpJournalServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'skeleton';
+    public static string $name = 'ip-journal';
 
-    public static string $viewNamespace = 'skeleton';
+    public static string $viewNamespace = 'ip-journal';
 
     public function configurePackage(Package $package): void
     {
@@ -36,7 +38,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
                     ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub(':vendor_slug/:package_slug');
+                    ->askToStarRepoOnGitHub('eddysstudio/ip-journal');
             });
 
         $configFileName = $package->shortName();
@@ -80,18 +82,21 @@ class SkeletonServiceProvider extends PackageServiceProvider
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
-                    $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
-                ], 'skeleton-stubs');
+                    $file->getRealPath() => base_path("stubs/ip-journal/{$file->getFilename()}"),
+                ], 'ip-journal-stubs');
             }
         }
 
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('log.ip', VisitsLog::class);
+
         // Testing
-        Testable::mixin(new TestsSkeleton);
+        Testable::mixin(new TestsIpJournal);
     }
 
     protected function getAssetPackageName(): ?string
     {
-        return ':vendor_slug/:package_slug';
+        return 'eddysstudio/ip-journal';
     }
 
     /**
@@ -100,9 +105,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            // Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.css'),
-            // Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
+            // AlpineComponent::make('ip-journal', __DIR__ . '/../resources/dist/components/ip-journal.js'),
+            // Css::make('ip-journal-styles', __DIR__ . '/../resources/dist/ip-journal.css'),
+            // Js::make('ip-journal-scripts', __DIR__ . '/../resources/dist/ip-journal.js'),
         ];
     }
 
@@ -112,7 +117,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            SkeletonCommand::class,
+            IpJournalCommand::class,
         ];
     }
 
@@ -146,7 +151,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_skeleton_table',
+            'create_ip_journal_table',
         ];
     }
 }

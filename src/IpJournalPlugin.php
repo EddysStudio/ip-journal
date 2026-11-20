@@ -1,15 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace EddysStudio\IpJournal;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+class IpJournalPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'ip-journal';
     }
 
     public function register(Panel $panel): void
