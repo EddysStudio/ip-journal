@@ -1,86 +1,69 @@
-# A plugin for logging and auditing visits and IP addresses for Laravel + Filament
+# Visit's log (IP — Journal)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/eddysstudio/ip-journal.svg?style=flat-square)](https://packagist.org/packages/eddysstudio/ip-journal)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/eddysstudio/ip-journal/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/eddysstudio/ip-journal/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/eddysstudio/ip-journal/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/eddysstudio/ip-journal/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/eddysstudio/ip-journal.svg?style=flat-square)](https://packagist.org/packages/eddysstudio/ip-journal)
+This package is a middleware plugin for the Filament Laravel admin panel, designed to log site visits. It stores the visitor's IP address, user agent, the URL visited, and the number of requests made to that URL by the visitor in a database. The stored data can be viewed in a dedicated section within the admin panel's sidebar.
 
+## Requirements
 
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+- PHP 8.2 or higher
+- Laravel 12
+- Filament 4.x
 
 ## Installation
 
-You can install the package via composer:
+1. Add the following to the `repositories` section of your project's `composer.json`:
 
+```json
+"repositories": [
+
+    {
+        "type": "vcs",
+        "url": "https://github.com/EddysStudio/ip-journal"
+    }
+]
+```
+
+Add the following to the `require` section of your project's `composer.json`:
+
+```json
+"require":
+    {
+
+        "eddysstudio/ip-journal": "^1.0"
+    }
+```
+
+2. Run the following composer commands in your project directory: 
 ```bash
-composer require eddysstudio/ip-journal
+    composer update eddysstudio/ip-journal
+    composer dump-autoload
 ```
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
-
-After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
-
-```css
-@source '../../../../vendor/eddysstudio/ip-journal/resources/**/*.blade.php';
-```
-
-You can publish and run the migrations with:
-
+3. Run the following artisan command in your project directory:
 ```bash
-php artisan vendor:publish --tag="ip-journal-migrations"
-php artisan migrate
+    php artisan migrate
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="ip-journal-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="ip-journal-views"
-```
-
-This is the contents of the published config file:
-
+4. Finally, register the plugin in your Filament panel provider (usually /app/Providers/Filament/AdminPanelProvider.php) :
 ```php
-return [
-];
+    ->plugin(new \EddysStudio\IpJournal\IpJournal())
 ```
-
-## Usage
-
+and register the middleware in /bootstrap/app.php :
 ```php
-$ipJournal = new EddysStudio\IpJournal();
-echo $ipJournal->echoPhrase('Hello, EddysStudio!');
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            'log.ip', 
+        ]);
+    })
 ```
-
-## Testing
-
-```bash
-composer test
+and if you need to log visits to the administrator section, also in your Filament panel provider:
+```php 
+use EddysStudio\IpJournal\Http\Middleware\VisitsLog;
+..
+ ->middleware([
+        ..
+        VisitsLog::class,
+    ])
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
-
-## Credits
-
-- [EddysStudio](https://github.com/EddysStudio)
-- [All Contributors](../../contributors)
 
 ## License
 
