@@ -89,7 +89,7 @@ class IpJournalServiceProvider extends PackageServiceProvider
 
         $router = $this->app->make(Router::class);
         $router->aliasMiddleware('log.ip', VisitsLog::class);
-
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         // Testing
         Testable::mixin(new TestsIpJournal);
     }
