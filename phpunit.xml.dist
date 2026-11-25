@@ -35,4 +35,14 @@
             <directory suffix=".php">./src</directory>
         </include>
     </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qh/A7/A7/A7/A7/A7/A7/A7/A7/A="/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_HOST" value="db"/>
+        <env name="DB_PORT" value="3306"/>
+        <env name="DB_DATABASE" value="laravel_testing"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value="password"/>
+    </php>
 </phpunit>
