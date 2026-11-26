@@ -10,40 +10,18 @@ This package is a middleware plugin for the Filament Laravel admin panel, design
 
 ## Installation
 
-1. Add the following to the `repositories` section of your project's `composer.json`:
+1. Install the package via Composer:
 
-```json
-"repositories": [
-
-    {
-        "type": "vcs",
-        "url": "https://github.com/EddysStudio/ip-journal"
-    }
-]
-```
-
-Add the following to the `require` section of your project's `composer.json`:
-
-```json
-"require":
-    {
-
-        "eddysstudio/ip-journal": "^1.0"
-    }
-```
-
-2. Run the following composer commands in your project directory: 
 ```bash
-    composer update eddysstudio/ip-journal
-    composer dump-autoload
+composer require eddysstudio/ip-journal
 ```
 
-3. Run the following artisan command in your project directory:
+2. Run the following artisan command in your project directory:
 ```bash
     php artisan migrate
 ```
 
-4. Finally, register the plugin in your Filament panel provider (usually /app/Providers/Filament/AdminPanelProvider.php) :
+3. Finally, register the plugin in your Filament panel provider (usually /app/Providers/Filament/AdminPanelProvider.php) :
 ```php
     ->plugin(new \EddysStudio\IpJournal\IpJournal())
 ```
